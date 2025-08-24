@@ -39,21 +39,56 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Mock form submission
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        projectType: 'web-development'
-      });
-    }, 3000);
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Mock form submission
+  //   setIsSubmitted(true);
+  //   setTimeout(() => {
+  //     setIsSubmitted(false);
+  //     setFormData({
+  //       name: '',
+  //       email: '',
+  //       subject: '',
+  //       message: '',
+  //       projectType: 'web-development'
+  //     });
+  //   }, 3000);
+  // };
+
+  
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+          projectType: "web-development",
+        });
+      }, 3000);
+    } else {
+      alert("❌ Failed to send message. Please try again.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("❌ An error occurred.");
+  }
+};
+
 
   const contactMethods = [
     {
